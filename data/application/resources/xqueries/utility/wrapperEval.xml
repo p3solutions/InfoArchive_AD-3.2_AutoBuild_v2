@@ -3,8 +3,8 @@
     <expression>
         <![CDATA[
         declare variable $xquery as xs:string external;
-        let $query := xquery
-        return xhive:evaluate($xquery)
+        let $query := $xquery
+        return xhive:evaluate($query)
         ]]>
     </expression>
 </xquery>

@@ -20,57 +20,27 @@
             <link href="SpryAssets/SpryCollapsiblePanel.css" rel="stylesheet" type="text/css" />
         </head>
         <body>
-            <!-- build a simple table and dump all the values that were recorded for this search -->
-
-             
-                    <!--   <xsl:apply-templates select="auditEntry[searchConfiguration = 'searchAuditLogs']"/>
-                    <xsl:apply-templates select="auditEntry[searchConfiguration = 'searchMedicalRecord']"/>
-                	-->
-            <xsl:apply-templates select="*"/>
+            <xsl:template match="*">
+				<div id="CollapsiblePanel1" class="CollapsiblePanel">
+					<div class="CollapsiblePanelTab" tabindex="0">Audit Log Access</div>
+					<div class="CollapsiblePanelContent">
+						<table>
+							<tbody>
+						<!-- dump out all the query parameters -->
+								<tr><td>Time</td><td><xsl:value-of select="time"/></td></tr>
+								<tr><td>User</td><td><xsl:value-of select="user"/></td></tr>
+								<xsl:for-each select="data/*">
+									<tr><td><xsl:value-of select="name(.)"/></td><td><xsl:value-of select="text()"/></td></tr>
+								</xsl:for-each>
+							</tbody>  
+						</table>
+					</div>
+				</div>
+			</xsl:template>
             <script type="text/javascript">
             var CollapsiblePanel1 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel1");
-            var CollapsiblePanel2 = new Spry.Widget.CollapsiblePanel("CollapsiblePanel2");
             </script>
         </body>
     </xsl:template>
-    <xsl:template match="*">
-        <div id="CollapsiblePanel1" class="CollapsiblePanel">
-            <div class="CollapsiblePanelTab" tabindex="0">Audit Log Access</div>
-            <div class="CollapsiblePanelContent">
-                <table>
-                <tbody>
-                <!-- dump out all the query parameters -->
-                    
-                    <tr><td>Time</td><td><xsl:value-of select="time"/></td></tr>
-                    <tr><td>User</td><td><xsl:value-of select="user"/></td></tr>
-                    <xsl:for-each select="data/*">
-                        <tr><td><xsl:value-of select="name(.)"/></td><td><xsl:value-of select="text()"/></td></tr>
-                    </xsl:for-each>
-                    
-                </tbody>  
-                </table>
-                
-            </div>
-            </div>
-    </xsl:template>
-    <xsl:template match="auditEntry[searchConfiguration = 'searchMedicalRecord']">
-        <div id="CollapsiblePanel2" class="CollapsiblePanel">
-            <div class="CollapsiblePanelTab" tabindex="0">Medical Record Searches</div>
-            <div class="CollapsiblePanelContent">
-                <table>
-                <tbody>
-                    <!-- dump out all the query parameters -->
-                    
-                    <tr><td>Time</td><td><xsl:value-of select="time"/></td></tr>
-                    <tr><td>User</td><td><xsl:value-of select="user"/></td></tr>
-                    <xsl:for-each select="data/*">
-                        <tr><td><xsl:value-of select="name(.)"/></td><td><xsl:value-of select="text()"/></td></tr>
-                    </xsl:for-each>
-                    
-                </tbody>
-                </table>
-            </div>
-        </div>
-        
-    </xsl:template>
+    
 </xsl:stylesheet>

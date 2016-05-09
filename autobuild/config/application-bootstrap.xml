@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>medtronic</name>
+  <name>medtronics</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>PDdX3YMF/REjYd9h9XGN1xp9VHYBqHNXkd9wE6C58iMRB5+rwKDIQ45jzoMwR9jHeeHaKVtmvzHhi+J+kZQ8zNUTkzDgcTNANgGEfxuvfcY2qT6GpA3IA9Vf7Z/XfcpQBzvyxTvEMnGQmYZZRV3NCAg6poyW/E2ut1B+aZzL0UM=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#medtronic</bootstrap>
-    <databaseName>medtronic</databaseName>
+    <bootstrap>xhive://localhost:1235#medtronics</bootstrap>
+    <databaseName>medtronics</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />
