@@ -5,9 +5,15 @@
         declare variable $user external;
 
         let $results :=
-            <results> {
-                for $elem in doc($path)/auditEntries/auditEntry[time = $dateTime and user = $user] return $elem
-            } </results>
+            <results> 
+			{
+				<result> 
+				{
+					for $elem in doc($path)/auditEntries/auditEntry[time = $dateTime and user = $user]/* return $elem
+				}
+				</result>
+            } 
+			</results>
         return $results
     ]]></expression>
 </xquery>
