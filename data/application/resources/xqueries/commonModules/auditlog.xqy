@@ -4,15 +4,29 @@ import module namespace common = 'common' at '/APPLICATIONS/changeme/resources/x
 
 declare variable $auditlog:basepath := '/DATA/changeme/Collection/AuditTrail';
 
-declare function auditlog:getAuditLogSearchResults($userId,$fromDate,$toDate,$filterAudits,$restrictions,$first,$last,$currentuser){
-	let $wClause := common:addClause("", "", "")
+(: search for audit entries :)
+declare function auditlog:getAuditLogSearchResults(
+    $currentuser as xs:string,
+    $first as xs:string,
+    $last as xs:string,
+    $input as xs:string
+) as element(results) {
+
+    let $inputDoc := xhive:parse($input)
+    let $inputData := $inputDoc/data
+    let $userId := $inputData/userId
+    let $fromDate := $inputData/fromDate
+    let $toDate := $inputData/toDate
+    let $filterAudits := $inputData/filterAudits
+
+    let $wClause := common:addClause("", "", "")
     let $wClause := common:addClause($wClause, $userId, concat("user = '", $userId, "' "))
     let $wClause := common:addRangeClause($wClause, $fromDate, concat($toDate, 'T99:99:99'), 'time')
     let $wClause := if ($wClause != "") then concat('[',$wClause,']') else $wClause
 
     let $queryString := concat("for $elem in doc('", $auditlog:basepath, "')/auditEntries/auditEntry", $wClause, " return $elem")
 
-    let $init-query := xhive:evaluate($queryString)
+    let $init-query := xhive:evaluate(trace($queryString, "========>"))
 
     let $main-query :=
         if ( $filterAudits  = 'archive' ) then

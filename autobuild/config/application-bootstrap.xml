@@ -5,6 +5,7 @@
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
+      <encryptedPassword>WTWWzH/8Lst7CCHs0hdwC6ajvPEBC/dW3lscyMFKN13G/Ov5Fp3nd6xcWU4qS9wQsLkz8y+OBqHgwNbHzkVDNnker74WAyRgPxONyDAsREY+jJU8mTrxWgIlNLAHW2GiKhjgg0Xt6WNO1D0Jk+//IpxfaipWSS2dRc+bP6oW+lc=</encryptedPassword>
     </defaultStoreUser>
     <bootstrap>xhive://localhost:1235#medtronics</bootstrap>
     <databaseName>medtronics</databaseName>
