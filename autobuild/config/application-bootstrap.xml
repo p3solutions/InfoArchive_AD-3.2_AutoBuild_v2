@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>medtronics</name>
+  <name>Eurydice</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>WTWWzH/8Lst7CCHs0hdwC6ajvPEBC/dW3lscyMFKN13G/Ov5Fp3nd6xcWU4qS9wQsLkz8y+OBqHgwNbHzkVDNnker74WAyRgPxONyDAsREY+jJU8mTrxWgIlNLAHW2GiKhjgg0Xt6WNO1D0Jk+//IpxfaipWSS2dRc+bP6oW+lc=</encryptedPassword>
+      <encryptedPassword>SwmmDZPF79JmwV+RbPpbiGmUvRw1T5gK8cv0gASNx3NqZJ6AKE0I9BIgi+EyC6ou1M8bWRDqqOvigME1+0fNWzzSdjJPrtrRs98zYnkuOgXVRi7uGsUcjKCR9xtuaTOoPCSklUaUqBw5bCOP7eN0+JdvsIqnwyzLswZaTb/kQzc=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#medtronics</bootstrap>
-    <databaseName>medtronics</databaseName>
+    <bootstrap>xhive://localhost:1235#Eurydice</bootstrap>
+    <databaseName>Eurydice</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />
