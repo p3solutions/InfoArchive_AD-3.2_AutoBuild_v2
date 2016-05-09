@@ -25,6 +25,18 @@
                     <searchSetting name="Audit Logs" refid="searchAuditLogs" />
                 </searchSettings>
             </node>
+			<node>
+				<id>DataloadInquiry</id>
+				<label>Dataload Inquiry</label>
+				<icon>businessobject16</icon>
+				<chainOfCustody>false</chainOfCustody>
+				<contentViewSettings>
+					<contentViewSetting refid="dataLoadModule"/>
+				</contentViewSettings>
+				<searchSettings>
+					<searchSetting name="Dataload Inquiry" refid="dataLoadInquiry"/>
+				</searchSettings>
+			</node>
         </node>
     </hierarchy>
 
@@ -57,108 +69,177 @@
             <xquery />
             <pdf>false</pdf>
         </transformationConfiguration>
-        <transformationConfiguration id="auditLogDetails">
+        <!-- Audit Logs -->
+		<transformationConfiguration id="auditLogDetails">
             <schemaIDs>auditLogDetails</schemaIDs>
             <styleURI>dds://DOMAIN=resource/xslt/auditLogDetails.xsl</styleURI>
             <pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
             <xquery>expand.xml</xquery>
             <pdf>false</pdf>
         </transformationConfiguration>
+		
+		<!-- Data Load -->
+		<transformationConfiguration id="dataLoadModule">
+			<schemaIDs>dataLoadModule</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/dataLoad/DataloadInquiry.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+			<xquery>expand.xml</xquery>
+			<pdf>false</pdf>
+		</transformationConfiguration>
     </transformationConfigurations>
 
     <searchConfigurations>
-        <searchConfiguration id="searchAuditLogs">
-            <xformName>SearchAuditLogs</xformName>
-            <xquery>
+		<!-- Audit Logs -->
+		<searchConfiguration id="searchAuditLogs">
+			<xformName>SearchAuditLogs</xformName>
+			<xquery>
                 <![CDATA[
-                import module namespace auditlog = 'auditlog' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/auditlog.xqy';
-                (: uncomment these next 3 lines to turn on xquery debug :)
-                (:
-                declare option xhive:index-debug 'true';
-                declare option xhive:queryplan-debug 'true';
-                declare option xhive:pathexpr-debug 'true';
-                :)
-                (:
-                declare option xhive:optimizer-debug 'true';
-                :)
-
-                declare variable $currentuser as xs:string external;
-                declare variable $first as xs:string external;
-                declare variable $last as xs:string external;
-                declare variable $input as xs:string external;
-
-                let $results := auditlog:getAuditLogSearchResults($currentuser, $first, $last, $input)
-                return $results
+	                import module namespace auditlog = 'auditlog' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/auditlog.xqy';
+	                declare variable $restrictions as xs:string external;
+	                declare variable $first as xs:string external;
+	                declare variable $last as xs:string external;
+	                declare variable $currentuser as xs:string external;
+	                
+	                let $userId 		:= '(: userId :)'
+	                let $fromDate 		:= '(: fromDate :)'
+	                let $toDate 		:= '(: toDate :)'
+	                let $filterAudits 	:= '(: filterAudits :)'
+	                return
+	                	auditlog:getAuditLogSearchResults($userId,$fromDate,$toDate,$filterAudits,$restrictions,$first,$last,$currentuser)
                 ]]>
             </xquery>
 
-            <searchFields>
-                <searchFieldRow>
-                    <searchField>
-                        <name>userId</name>
-                        <label>User ID</label>
-                        <whereclauseparameter>$elem/user</whereclauseparameter>
-                        <fullText>true</fullText>
-                    </searchField>
-                    <searchField>
-                        <name>fromDate</name>
-                        <label>From Date</label>
-                        <type>date</type>
-                        <whereclauseparameter>$elem/time</whereclauseparameter>
-                        <operator><![CDATA[>=]]></operator>
-                    </searchField>
-                    <searchField>
-                        <name>toDate</name>
-                        <label>To Date</label>
-                        <type>date</type>
-                        <whereclauseparameter>$elem/time</whereclauseparameter>
-                        <operator><![CDATA[<=]]></operator>
-                    </searchField>
-                    <searchField>
-                        <name>filterAudits</name>
-                        <label>Filter Audit Lookups</label>
-                        <flexiblecode>%ARG%</flexiblecode>
-                        <options type="select">
-                            <option>
-                                <name>all</name>
-                                <label>All</label>
-                            </option>
-                            <option>
-                                <name>archive</name>
-                                <label>Archive</label>
-                            </option>
-                            <option>
-                                <name>login</name>
-                                <label>Login</label>
-                            </option>
-                            <option>
-                                <name>audit</name>
-                                <label>Audit</label>
-                            </option>
-                        </options>
-                    </searchField>
-                </searchFieldRow>
-            </searchFields>
-            <searchResultItems>
-                <searchResultItem>
-                    <name>user</name>
-                    <label>User</label>
-                </searchResultItem>
-                <searchResultItem>
-                    <name>searchConfiguration</name>
-                    <label>Search Configuration</label>
-                </searchResultItem>
-                <searchResultItem>
-                    <label>Time</label>
-                    <name>eventTime</name>
-                </searchResultItem>
-            </searchResultItems>
+			<searchFields>
+				<searchFieldRow>
+					<searchField>
+						<name>userId</name>
+						<label>User ID</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>true</fullText>
+					</searchField>
+					<searchField>
+						<name>fromDate</name>
+						<label>From Date</label>
+						<type>date</type>
+						<flexiblecode>%ARG%</flexiblecode>
+					</searchField>
+					<searchField>
+						<name>toDate</name>
+						<label>To Date</label>
+						<type>date</type>
+						<flexiblecode>%ARG%</flexiblecode>
+					</searchField>
+					<searchField>
+						<name>filterAudits</name>
+						<label>Filter Audit Lookups</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<options type="select">
+							<option>
+								<name>all</name>
+								<label>All</label>
+							</option>
+							<option>
+								<name>archive</name>
+								<label>Archive</label>
+							</option>
+							<option>
+								<name>login</name>
+								<label>Login</label>
+							</option>
+							<option>
+								<name>audit</name>
+								<label>Audit</label>
+							</option>
+						</options>
+					</searchField>
+				</searchFieldRow>
+			</searchFields>
+			<searchResultItems>
+				<searchResultItem>
+					<name>user</name>
+					<label>User</label>
+				</searchResultItem>
+				<searchResultItem>
+					<name>searchConfiguration</name>
+					<label>Search Configuration</label>
+				</searchResultItem>
+				<searchResultItem>
+					<label>Time</label>
+					<name>eventTime</name>
+				</searchResultItem>
+			</searchResultItems>
+			<nestedSearches>
+			</nestedSearches>
+			<crpWidth>800</crpWidth>
+		</searchConfiguration>
 
-            <nestedSearches>
-            </nestedSearches>
-            <crpWidth>800</crpWidth>
-        </searchConfiguration>
-    </searchConfigurations>
+		<!-- Data Load -->
+		<searchConfiguration id="dataLoadInquiry">
+			<xformName>DataLoadForm</xformName>
+			<xquery>
+				<![CDATA[ 
+					import module namespace searchLoad = 'searchLoad' at '/APPLICATIONS/changeme/resources/xqueries/templateContentSearches/searchLoad.xqy';
+
+					declare variable $restrictions as xs:string external;
+					declare variable $first as xs:string external;
+					declare variable $last as xs:string external;
+					declare variable $currentuser as xs:string external;
+
+					let $tableName 	:= '(: tableName :)'
+					let $fromDate	:= '(: fromDate :)'
+					let $toDate 	:= '(: toDate :)'
+					return
+						searchLoad:start($tableName,$fromDate,$toDate,$restrictions,$first,$last,$currentuser)
+				]]>
+			</xquery>
+			<searchFields>
+				<searchFieldRow>
+					<searchField>
+						<name>tableName</name>
+						<label>Table Name</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+					<searchField>
+						<name>fromDate</name>
+						<label>From Date</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+					<searchField>
+						<name>toDate</name>
+						<label>To Date</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+				</searchFieldRow>
+			</searchFields>
+			<searchResultItems>
+				<searchResultItem>
+					<name>table</name>
+					<label>Table</label>
+				</searchResultItem>
+				<searchResultItem>
+					<name>date</name>
+					<label>Date</label>
+				</searchResultItem>
+				<searchResultItem>
+					<name>count</name>
+					<label>Count</label>
+				</searchResultItem>
+			</searchResultItems>
+			<nestedSearches>
+				<nestedSearch>
+					<name>Load Details</name>
+					<label>Load Details</label>
+					<description>Load Details</description>
+					<configurationId>dummy</configurationId>
+					<transformationConfiguration>dataLoadModule</transformationConfiguration>
+				</nestedSearch>
+			</nestedSearches>
+		</searchConfiguration>
+		
+   </searchConfigurations>
 
     <operationConfigurations>
         <operationConfiguration id="add-hold">
