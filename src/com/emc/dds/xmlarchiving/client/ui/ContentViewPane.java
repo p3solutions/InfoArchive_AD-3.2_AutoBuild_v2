@@ -3,8 +3,11 @@
  *******************************************************************************/
 package com.emc.dds.xmlarchiving.client.ui;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -32,6 +35,7 @@ import com.emc.documentum.xml.xproc.gwt.client.rpc.SerializableSource;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame.DefaultXProcRequestSerializer;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame.XProcRequestSerializer;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -177,6 +181,7 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
   }
 
   private class ExportPDFButton extends Button implements ClickHandler {
+
     /**
      * Used to temporarily encode '&' in content of the encoded URL
      */
@@ -463,8 +468,9 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
       if (xquery != null && !"".equals(xquery)) {
         displayBusinessObject(title, typeAttr, selectedElement, previewSetting);
         Role role = applicationSettings.getRole();
-        logRequest(applicationSettings.getHierarchy().getTitle(), typeAttr, selectedElement,
-            applicationSettings.getUserName(), role.getUnauthorizedFields());
+        //logRequest(applicationSettings.getHierarchy().getTitle(), typeAttr, selectedElement,
+          //  applicationSettings.getUserName(), role.getUnauthorizedFields());
+        //logRequest("yuva", typeAttr, selectedElement,"test", role.getUnauthorizedFields());
       } else if (uri != null && !"".equals(uri)) {
         displayUri(uri, title, previewSetting, null);
       } else {
@@ -483,6 +489,8 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
 
   public void displayBusinessObject(String title, String typ, Element selectedElement,
       ContentViewSetting previewSetting) {
+	currentElement=selectedElement;//yuvanya
+	currentElement.setAttribute("type", typ);//yuvanya
     Map<SerializableQName, String> parameters = new HashMap<SerializableQName, String>();
     NamedNodeMap attributes = selectedElement.getAttributes();
     for (int k = 0; k < attributes.getLength(); k++) {
@@ -565,3 +573,4 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
   LogCenterFailureListener loggerListener = new LogCenterFailureListener();
 
 }
+	
