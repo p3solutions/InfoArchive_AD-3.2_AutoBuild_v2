@@ -31,6 +31,7 @@ import com.emc.dds.xmlarchiving.client.configuration.SearchResultItem;
 import com.emc.dds.xmlarchiving.client.configuration.SearchSetting;
 import com.emc.dds.xmlarchiving.client.configuration.SearchSettings;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
+import com.emc.dds.xmlarchiving.client.p3.util.UISize;
 import com.emc.dds.xmlarchiving.client.ui.AbstractSearchResultPane;
 import com.emc.dds.xmlarchiving.client.ui.ContentPane;
 import com.emc.dds.xmlarchiving.client.ui.ContentViewPane;
@@ -73,7 +74,9 @@ public class ConfigurationLoader {
   private Main main;
 
   private LayoutPanel outerPane;
-
+  
+  private boolean uageDataset = false;
+  
   public ConfigurationLoader(List<String> configuration) {
     contentConfiguration = configuration.get(0);
     paneConfiguration = configuration.get(1);
@@ -85,7 +88,7 @@ public class ConfigurationLoader {
     loadContentConfiguration();
     loadPaneConfiguration();
     ScrollPanel scrollPanel = new ScrollPanel(outerPane);
-    outerPane.setHeight("700px"); // 1100
+    outerPane.setHeight(uageDataset?UISize.getEntireHeightWithDSStr():UISize.getEntireHeightStr()); // 1100
     RootLayoutPanel.get().add(scrollPanel);
     outerPane.add(mainPane);
     outerPane.setWidgetTopBottom(mainPane, 44, Unit.PX, 30, Unit.PX);
@@ -206,7 +209,7 @@ public class ConfigurationLoader {
         break;
       case Pane.SEARCH_PANE:
         pane = new SearchPane(applicationSettings);
-        mainPane.addNorth(pane, 250);
+        mainPane.addNorth(pane, UISize.getSearchHeightInt());
         break;
       case Pane.SEARCH_RESULT_PANE:
         SplitLayoutPanel searchResultPanel = new SplitLayoutPanel();
@@ -220,7 +223,7 @@ public class ConfigurationLoader {
                 ContentViewPane.RECORD_DETAILS_TYPE);
         pane = new SearchResultPane(applicationSettings, viewPane, maxListCount, truncateLabels);
         ((AbstractSearchResultPane)pane).init();
-        searchResultPanel.addEast(viewPane, 300);
+        searchResultPanel.addEast(viewPane, UISize.getInteriorResultsHeightInt());
         searchResultPanel.add(pane);
         mainPane.add(searchResultPanel);
         break;
@@ -232,6 +235,7 @@ public class ConfigurationLoader {
             ContentViewPane.TICKET_INFO_TYPE);
         break;
       case Pane.DATA_SET_LIST_PANE:
+    	uageDataset= true;
         SplitLayoutPanel dataSetPanel = new SplitLayoutPanel();
         ContentViewPane ticketInfoPane =
             new ContentViewPane(applicationSettings, Locale.getLabels().entityInfo(),
@@ -243,8 +247,7 @@ public class ConfigurationLoader {
           dataSetPanel.addEast(ticketInfoPane, 300);
         }
         dataSetPanel.add(pane);
-
-        mainPane.addNorth(dataSetPanel, 250);
+        mainPane.addNorth(dataSetPanel, UISize.getDetaSetHeightInt());
         break;
       case Pane.MENU_PANE:
     	  pane = new MenuPane(this.applicationSettings, false, true);
@@ -252,7 +255,7 @@ public class ConfigurationLoader {
        		 menuPanel.add(pane);
        		 this.outerPane.add(menuPanel);
        		 this.outerPane.setWidgetTopHeight(pane, 0, Unit.PX, 20, Unit.PX);*/
-    	  this.mainPane.addNorth(pane, 20);
+    	  this.mainPane.addNorth(pane, UISize.getMenuHeightInt());
     	  break;
     }
     if (pane != null) {

@@ -30,5 +30,15 @@ public class UISize {
                 getMenuHeightInt();
         return height + "px";
     }
+
+	public static int getDetaSetHeightInt() {
+		return 250;
+	}
+
+	public static String getEntireHeightWithDSStr() {
+		int height = BASE_HEIGHT + getInteriorResultsHeightInt() + getSearchHeightInt() +
+                getDetaSetHeightInt();
+        return height + "px";
+	}
     
 }
