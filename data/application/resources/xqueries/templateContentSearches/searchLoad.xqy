@@ -1,13 +1,12 @@
 module namespace searchLoad = 'searchLoad';
 
-import module namespace appname 			= 'appname' at '/APPLICATIONS/changeme/appname/appname.xqy';
 import module namespace common 				= 'common' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/common.xqy';
 import module namespace utility 			= 'utility' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/utility.xqy';
 import module namespace dynamicQueryModule 	= 'dynamicQueryModule' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/dynamicQueryModule.xqy';
 
 declare variable $searchLoad:adddate := 'P10D';
 declare variable $searchLoad:subdate := '-P10D';
-declare variable $searchLoad:path := concat("/DATA/",$appname:pathname,"/Collection/LOAD/");
+declare variable $searchLoad:path := '/DATA/changeme/Collection/LOAD/';
 
 declare function searchLoad:start($table,$Fdate,$Tdate,$restrictions,$first,$last,$currentuser){
 	let $x 			:= searchLoad:computeDate($Fdate,$Tdate)
