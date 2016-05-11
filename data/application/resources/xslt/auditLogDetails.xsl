@@ -32,7 +32,7 @@
 			<div id="CollapsiblePanel0" class="CollapsiblePanel">
 				<div class="CollapsiblePanelTab" tabindex="0">Audit Details</div>
 				<div class="CollapsiblePanelContent">
-					<table width="100%" border="1">
+					<table width="100%" border="0">
 						<tr>
 							<td>Time</td>
 							<td>
@@ -53,7 +53,13 @@
 				<div class="CollapsiblePanelTab" tabindex="0">Additional Information
 				</div>
 				<div class="CollapsiblePanelContent">
-					<table width="100%" border="1">
+					<table width="100%" border="0">
+						<thead>
+						<tr>
+							<td>Criteria</td>
+							<td>Value</td>
+							</tr>
+						</thead>
 						<xsl:for-each select="result/data/*">
 							<tr>
 								<td>
@@ -64,6 +70,8 @@
 								</td>
 							</tr>
 						</xsl:for-each>
+						<tr>
+						<td colspan="2"><hr/></td></tr>
 					</table>
 				</div>
 			</div>

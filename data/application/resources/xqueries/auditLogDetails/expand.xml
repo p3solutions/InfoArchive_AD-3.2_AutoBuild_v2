@@ -1,6 +1,9 @@
 <xquery xmlns="http://www.emc.com/documentum/xml/dds">
     <expression><![CDATA[
-        declare variable $path :='/DATA/changeme/Collection/AuditTrail';
+        
+		import module namespace appname = 'appname' at '/APPLICATIONS/changeme/appname/appname.xqy';
+		
+		declare variable $path := concat("/DATA/",$appname:pathname,"/Collection/AuditTrail");
         declare variable $dateTime external;
         declare variable $user external;
 

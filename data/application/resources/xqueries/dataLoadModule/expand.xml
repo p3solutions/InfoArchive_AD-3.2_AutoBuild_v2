@@ -1,13 +1,14 @@
 <xquery xmlns="http://www.emc.com/documentum/xml/dds">
     <expression><![CDATA[
 
+	import module namespace appname = 'appname' at '/APPLICATIONS/changeme/appname/appname.xqy';
+
 	declare variable $table as xs:string external;
 	declare variable $date as xs:string external;
 	declare variable $count as xs:string external;
 	
-	declare variable $path 		:= '/DATA/changeme/Collection/LOAD/';
-	declare variable $audPath 	:= '/DATA/changeme/Collection/Audit/';
-	declare variable $tableName := 'Audit';
+	declare variable $path 		:= concat("/DATA/",$appname:pathname,"/Collection/LOAD/");
+	declare variable $audPath 	:= concat("/DATA/",$appname:pathname,"/Collection/Audit/");
 
 	declare function local:getDate($date){
 		concat(substring($date,7),substring($date,1,2),substring($date,4,2))
@@ -24,10 +25,6 @@
 						ROW_COUNT 	= '{$i/ROW_COUNT}'
 					/>
 
-	let $ids := if(upper-case($table) = upper-case($tableName)) 
-				then <resIds ids='{string-join(for $i in $set/@FILE return doc(concat($audPath,$i))/Audit/Audit-ROW/Id,", ")}'/>
-				else ()
-
 	return
 		<results 
 			tablename 	= '{$table}' 
@@ -36,7 +33,7 @@
 			
 		>
 		{
-			($set,$ids) 
+			($set) 
 		}
 		</results>	
 ]]></expression>

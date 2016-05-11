@@ -1,8 +1,9 @@
 module namespace auditlog = 'auditlog';
 
-import module namespace common = 'common' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/common.xqy';
+import module namespace appname = 'appname' at '/APPLICATIONS/changeme/appname/appname.xqy';
+import module namespace common  = 'common' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/common.xqy';
 
-declare variable $auditlog:basepath := '/DATA/changeme/Collection/AuditTrail';
+declare variable $auditlog:basepath := concat("'/DATA/",$appname:pathname,"/Collection/AuditTrail'");
 
 declare function auditlog:getAuditLogSearchResults($userId,$fromDate,$toDate,$filterAudits,$restrictions,$first,$last,$currentuser){
 	let $wClause := common:addClause("", "", "")
@@ -10,7 +11,7 @@ declare function auditlog:getAuditLogSearchResults($userId,$fromDate,$toDate,$fi
     let $wClause := common:addRangeClause($wClause, $fromDate, concat($toDate, 'T99:99:99'), 'time')
     let $wClause := if ($wClause != "") then concat('[',$wClause,']') else $wClause
 
-    let $queryString := concat("for $elem in doc('", $auditlog:basepath, "')/auditEntries/auditEntry", $wClause, " return $elem")
+    let $queryString := concat("for $elem in doc(",$auditlog:basepath,")/auditEntries/auditEntry", $wClause, " return $elem")
 
     let $init-query := xhive:evaluate($queryString)
 
