@@ -520,6 +520,9 @@
         </zip>
     </target>
 
+	<!--
+	Renaming recources app name function - Malik
+	-->
 	<target name="init-renaming">
 		<if>
 			<equals arg1="${rename}" arg2="true"/>
@@ -528,18 +531,8 @@
 				<property name="appsearch.key" value="/Eurydice/"/>
 				<property name="apprep.key" value="/${application}/"/>
 				-->
-				<input
-					message="Please enter search Key:"
-					addproperty="appsearch.key"
-					defaultvalue="/Eurydice/"
-				/>
-				<input
-					message="Please enter replacement Key:"
-					addproperty="apprep.key"
-					defaultValue="/${application}/"
-				/>
-				<echo>echo : ${appsearch.key} </echo>
-				<echo>echo : ${apprep.key} </echo>
+				<input message="Please enter search Key:" addproperty="appsearch.key" defaultvalue="/Eurydice/"/>
+				<input message="Please enter replacement Key:" addproperty="apprep.key" defaultValue="/${application}/"/>
 			</then>
 		</if>
 	</target>
