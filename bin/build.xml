@@ -562,7 +562,7 @@
 	<macrodef name="rename-app-files">
 		<attribute name="id" default="${appsearch.key}" />
 		<sequential>
-			<replace dir="../applications/${application}/data/application/resources/" includes="**/*">
+			<replace dir="../data/application/resources/" includes="**/*">
 				<replacefilter token="@{id}" value="${apprep.key}" />
 			</replace>
 		</sequential>

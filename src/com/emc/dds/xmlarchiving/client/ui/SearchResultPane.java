@@ -21,6 +21,7 @@ import com.emc.dds.xmlarchiving.client.configuration.OperationField;
 import com.emc.dds.xmlarchiving.client.data.StoredQueryDataSource;
 import com.emc.dds.xmlarchiving.client.event.ApplicationEvent;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
+import com.emc.dds.xmlarchiving.client.p3.util.UISize;
 import com.emc.dds.xmlarchiving.client.rpc.LDMService;
 import com.emc.dds.xmlarchiving.client.rpc.LDMServiceAsync;
 import com.emc.dds.xmlarchiving.client.ui.image.MainImageBundle;

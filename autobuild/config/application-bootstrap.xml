@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>medtronicsTest</name>
+  <name>eurydice_france</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>JCopb/9TlKb/wMpDac/i+ZmJmKjon1Z5Nizg00I6R4EId8DQeQV7u2Xa6LJH4EcMt45fA+nvM5gar1SMn68vI3gG5tHGI0jZynp1/peUr9cWvRl7sr7D0vF74xZCXpgRgqPb8pDbXkqSvRpLJ2TSk4bkhbahGt5Dqo6qWkI03Ks=</encryptedPassword>
+      <encryptedPassword>Mcfdhxji1j8M2dNXp7IKFXuPUR0QmfJZqULzS7wAbM+GmnLi2JdKfVmGmXdOd0CgukS6LQ5SQ0q4Pqh8H/qSukjPbdzwDmZX0ET+L9i6bocE/9AFA8Oa/GwUCo7QX8aVqu4QXU+h64lDgfrFCR+dwjbHfn+qV+vTTKmjTatXmqw=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#medtronicsTest</bootstrap>
-    <databaseName>medtronicsTest</databaseName>
+    <bootstrap>xhive://localhost:1235#eurydice_france</bootstrap>
+    <databaseName>eurydice_france</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />
