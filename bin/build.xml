@@ -342,7 +342,7 @@
     </target>
 
     <!-- load-all application data, including xqueries -->
-    <target name="load-application-data" depends="-init-anttasks" unless="dontLoad">
+    <target name="load-application-data" depends="-rename-initial-app, -init-anttasks" unless="dontLoad">
         <property name="dontLoad" value="true" />
         <xdb:database id="database" bootstrap="${xdb.bootstrap}" name="${xdb.databasename}" user="${xdb.username}" password="${xdb.password}" />
         <!-- Copy custom XForms over -->
@@ -520,4 +520,51 @@
         </zip>
     </target>
 
+	<target name="init-renaming">
+		<if>
+			<equals arg1="${rename}" arg2="true"/>
+			<then>
+				<!--
+				<property name="appsearch.key" value="/Eurydice/"/>
+				<property name="apprep.key" value="/${application}/"/>
+				-->
+				<input
+					message="Please enter search Key:"
+					addproperty="appsearch.key"
+					defaultvalue="/Eurydice/"
+				/>
+				<input
+					message="Please enter replacement Key:"
+					addproperty="apprep.key"
+					defaultValue="/${application}/"
+				/>
+				<echo>echo : ${appsearch.key} </echo>
+				<echo>echo : ${apprep.key} </echo>
+			</then>
+		</if>
+	</target>
+	
+	<target name="-rename-initial-app" depends="-init, init-renaming">
+		<if>
+			<equals arg1="${rename}" arg2="true"/>
+			<then>
+				<echo>Starting Replacment of ${appsearch.key} to ${apprep.key}</echo>
+				<rename-app-files />
+				<echo>Replacement Completed</echo>
+			</then>
+			<else>
+				<echo>Skipping Renaming application command</echo>
+			</else>
+		</if>
+	</target>
+
+	
+	<macrodef name="rename-app-files">
+		<attribute name="id" default="${appsearch.key}" />
+		<sequential>
+			<replace dir="../applications/${application}/data/application/resources/" includes="**/*">
+				<replacefilter token="@{id}" value="${apprep.key}" />
+			</replace>
+		</sequential>
+	</macrodef>
 </project>

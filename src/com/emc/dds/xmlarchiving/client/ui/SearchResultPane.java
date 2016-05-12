@@ -405,7 +405,7 @@ public class SearchResultPane extends AbstractSearchResultPane {
 
   private HorizontalPanel hPanel = new HorizontalPanel();
   
-  public static final String CORE_HEIGHT = "280px";
+  public static final String CORE_HEIGHT = UISize.getInteriorResultsHeightStr();
 
   private LDMBorderDecorator decorator;
 
