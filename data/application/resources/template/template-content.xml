@@ -69,6 +69,14 @@
             <xquery />
             <pdf>false</pdf>
         </transformationConfiguration>
+		<transformationConfiguration id="noRecordDetails">
+            <schemaIDs>noRecordDetails</schemaIDs>
+            <styleURI>dds://DOMAIN=resource/xslt/blankScreen.xsl</styleURI>
+            <pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+            <xquery>expand.xml</xquery>
+            <pdf>false</pdf>
+        </transformationConfiguration>
+		<!-- Audit Log -->
         <transformationConfiguration id="auditLogDetails">
             <schemaIDs>auditLogDetails</schemaIDs>
             <styleURI>dds://DOMAIN=resource/xslt/auditLogDetails.xsl</styleURI>
