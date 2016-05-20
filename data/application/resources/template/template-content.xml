@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/template-content.xsd">
-    <dataset>
-        <name>application_dataset_name</name>
-    </dataset>
-    <dataset>
-        <name>metadata</name>
-    </dataset>
+	<dataset>
+		<name>application_dataset_name</name>
+	</dataset>
+	<dataset>
+		<name>metadata</name>
+	</dataset>
 
-    <hierarchy>
-        <title>DECOMM APPLICATION TITLE</title>
-        <node>
-            <id>parent_node_id</id>
-            <label>PARENT NODE LABEL</label>
-            <icon>allapplications16</icon>
-            <node>
-                <id>auditlog</id>
-                <label>Audit Logs</label>
-                <icon>businessobject16</icon>
-                <chainOfCustody>false</chainOfCustody>
-                <contentViewSettings>
-                    <contentViewSetting refid="auditLogDetails" />
-                </contentViewSettings>
-                <searchSettings>
-                    <searchSetting name="Audit Logs" refid="searchAuditLogs" />
-                </searchSettings>
-            </node>
+	<hierarchy>
+		<title>DECOMM APPLICATION TITLE</title>
+		<node>
+			<id>parent_node_id</id>
+			<label>PARENT NODE LABEL</label>
+			<icon>allapplications16</icon>
+			<node>
+				<id>auditlog</id>
+				<label>Audit Logs</label>
+				<icon>businessobject16</icon>
+				<chainOfCustody>false</chainOfCustody>
+				<contentViewSettings>
+					<contentViewSetting refid="auditLogDetails" />
+				</contentViewSettings>
+				<searchSettings>
+					<searchSetting name="Audit Logs" refid="searchAuditLogs" />
+				</searchSettings>
+			</node>
 			<node>
 				<id>DataloadInquiry</id>
 				<label>Dataload Inquiry</label>
@@ -32,58 +32,60 @@
 				<chainOfCustody>false</chainOfCustody>
 				<contentViewSettings>
 					<contentViewSetting refid="dataLoadModule"/>
+					<contentViewSetting refid="dataExtractModule"/>
 				</contentViewSettings>
 				<searchSettings>
+					<searchSetting name="Data Extraction Inquiry" refid="dataExtractInquiry"/>
 					<searchSetting name="Dataload Inquiry" refid="dataLoadInquiry"/>
 				</searchSettings>
 			</node>
-        </node>
-    </hierarchy>
+		</node>
+	</hierarchy>
 
-    <transformationConfigurations>
-        <transformationConfiguration id="displayDefault">
-            <schemaIDs></schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/xml-verbatim.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
-            <xquery>expand.xml</xquery>
-            <pdf>false</pdf>
-        </transformationConfiguration>
-        <transformationConfiguration id="displayURIDefault">
-            <schemaIDs></schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/xml-verbatim.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
-            <xquery />
-            <pdf>false</pdf>
-        </transformationConfiguration>
-        <transformationConfiguration id="empty">
-            <schemaIDs>empty.xsd</schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/empty.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
-            <xquery />
-            <pdf>false</pdf>
-        </transformationConfiguration>
-        <transformationConfiguration id="displayChainOfCustodyInfo">
-            <schemaIDs>chainofcustody.xsd</schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/chainofcustody.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
-            <xquery />
-            <pdf>false</pdf>
-        </transformationConfiguration>
+	<transformationConfigurations>
+		<transformationConfiguration id="displayDefault">
+			<schemaIDs/>
+			<styleURI>dds://DOMAIN=resource/xslt/xml-verbatim.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+			<xquery>expand.xml</xquery>
+			<pdf>false</pdf>
+		</transformationConfiguration>
+		<transformationConfiguration id="displayURIDefault">
+			<schemaIDs/>
+			<styleURI>dds://DOMAIN=resource/xslt/xml-verbatim.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
+			<xquery />
+			<pdf>false</pdf>
+		</transformationConfiguration>
+		<transformationConfiguration id="empty">
+			<schemaIDs>empty.xsd</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/empty.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
+			<xquery />
+			<pdf>false</pdf>
+		</transformationConfiguration>
+		<transformationConfiguration id="displayChainOfCustodyInfo">
+			<schemaIDs>chainofcustody.xsd</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/chainofcustody.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/display.xpl</pipelineURI>
+			<xquery />
+			<pdf>false</pdf>
+		</transformationConfiguration>
 		<transformationConfiguration id="noRecordDetails">
-            <schemaIDs>noRecordDetails</schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/blankScreen.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
-            <xquery>expand.xml</xquery>
-            <pdf>false</pdf>
-        </transformationConfiguration>
+			<schemaIDs>noRecordDetails</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/blankScreen.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+			<xquery>expand.xml</xquery>
+			<pdf>false</pdf>
+		</transformationConfiguration>
 		<!-- Audit Log -->
-        <transformationConfiguration id="auditLogDetails">
-            <schemaIDs>auditLogDetails</schemaIDs>
-            <styleURI>dds://DOMAIN=resource/xslt/auditLogDetails.xsl</styleURI>
-            <pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
-            <xquery>expand.xml</xquery>
-            <pdf>false</pdf>
-        </transformationConfiguration>
+		<transformationConfiguration id="auditLogDetails">
+			<schemaIDs>auditLogDetails</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/auditLogDetails.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+			<xquery>expand.xml</xquery>
+			<pdf>false</pdf>
+		</transformationConfiguration>
 		<!-- Data Load -->
 		<transformationConfiguration id="dataLoadModule">
 			<schemaIDs>dataLoadModule</schemaIDs>
@@ -92,15 +94,21 @@
 			<xquery>expand.xml</xquery>
 			<pdf>false</pdf>
 		</transformationConfiguration>
-    </transformationConfigurations>
+		<transformationConfiguration id="dataExtractModule">
+			<schemaIDs>dataExtractModule</schemaIDs>
+			<styleURI>dds://DOMAIN=resource/xslt/dataLoad/DataExtractInquiry.xsl</styleURI>
+			<pipelineURI>dds://DOMAIN=resource/xproc/displayxqueryresult.xpl</pipelineURI>
+			<xquery>expand.xml</xquery>
+			<pdf>false</pdf>
+		</transformationConfiguration>
+	</transformationConfigurations>
 
-    <searchConfigurations>
-			
+	<searchConfigurations>
 		<!-- Audit Logs -->
 		<searchConfiguration id="searchAuditLogs">
 			<xformName>SearchAuditLogs</xformName>
 			<xquery>
-                <![CDATA[
+				<![CDATA[
 	                import module namespace auditlog = 'auditlog' at '/APPLICATIONS/changeme/resources/xqueries/commonModules/auditlog.xqy';
 	                declare variable $restrictions as xs:string external;
 	                declare variable $first as xs:string external;
@@ -114,8 +122,7 @@
 	                return
 	                	auditlog:getAuditLogSearchResults($userId,$fromDate,$toDate,$filterAudits,$restrictions,$first,$last,$currentuser)
                 ]]>
-            </xquery>
-
+			</xquery>
 			<searchFields>
 				<searchFieldRow>
 					<searchField>
@@ -180,7 +187,7 @@
 			<crpWidth>800</crpWidth>
 		</searchConfiguration>
 
-		
+
 		<!-- Data Load -->
 		<searchConfiguration id="dataLoadInquiry">
 			<xformName>DataLoadForm</xformName>
@@ -246,61 +253,125 @@
 				</nestedSearch>
 			</nestedSearches>
 		</searchConfiguration>
-		
-    </searchConfigurations>
 
-    <operationConfigurations>
-        <operationConfiguration id="add-hold">
-            <xqueries>
-                <xquery>add-hold.xml</xquery>
-            </xqueries>
-            <buttonLabel>Hold</buttonLabel>
-            <dialogTitle>Add hold to $count item(s)</dialogTitle>
-            <xformName>AddHoldsForm</xformName>
-            <operationFields>
-                <operationField>
-                    <name>name</name>
-                    <label>Name</label>
-                </operationField>
-                <operationField>
-                    <name>description</name>
-                    <label>Description</label>
-                </operationField>
-                <operationField>
-                    <name>date</name>
-                    <label>Date</label>
-                    <type>date</type>
-                    <required>true</required>
-                </operationField>
-            </operationFields>
-        </operationConfiguration>
-        <operationConfiguration id="set-retention">
-            <xqueries>
-                <xquery>set-retention.xml</xquery>
-            </xqueries>
-            <buttonLabel>Retention</buttonLabel>
-            <dialogTitle>Set retention on $count item(s)</dialogTitle>
-            <xformName>SetRetentionForm</xformName>
-            <operationFields>
-                <operationField>
-                    <name>date</name>
-                    <label>Date</label>
-                    <type>date</type>
-                    <required>true</required>
-                </operationField>
-                <operationField>
-                    <name>XQuery</name>
-                    <label>XQUERYNAME</label>
-                </operationField>
-            </operationFields>
-        </operationConfiguration>
-        <operationConfiguration id="remove-hold">
-            <xqueries>
-                <xquery>remove-hold.xml</xquery>
-            </xqueries>
-            <buttonLabel>Remove Holds</buttonLabel>
-            <dialogTitle>Remove holds</dialogTitle>
-            <message>Are you sure you want to remove the selected $count hold(s)?</message>
-        </operationConfiguration>
-    </operationConfigurations>
+		<searchConfiguration id="dataExtractInquiry">
+			<xformName>DataExtractForm</xformName>
+			<xquery>
+				<![CDATA[ 
+					import module namespace searchExtract = 'searchExtract' at '/APPLICATIONS/changeme/resources/xqueries/templateContentSearches/searchExtract.xqy';
+
+					declare variable $restrictions as xs:string external;
+					declare variable $first as xs:string external;
+					declare variable $last as xs:string external;
+					declare variable $currentuser as xs:string external;
+
+					let $tableName 	:= '(: tableName :)'
+					let $fromDate	:= '(: fromDate :)'
+					let $toDate 	:= '(: toDate :)'
+					return
+						searchExtract:start($tableName,$fromDate,$toDate,$restrictions,$first,$last,$currentuser)
+				]]>
+			</xquery>
+			<searchFields>
+				<searchFieldRow>
+					<searchField>
+						<name>tableName</name>
+						<label>Table Name</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+					<searchField>
+						<name>fromDate</name>
+						<label>From Date</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+					<searchField>
+						<name>toDate</name>
+						<label>To Date</label>
+						<flexiblecode>%ARG%</flexiblecode>
+						<fullText>false</fullText>
+					</searchField>
+				</searchFieldRow>
+			</searchFields>
+			<searchResultItems>
+				<searchResultItem>
+					<name>table</name>
+					<label>Table</label>
+				</searchResultItem>
+				<searchResultItem>
+					<name>date</name>
+					<label>Date</label>
+				</searchResultItem>
+				<searchResultItem>
+					<name>count</name>
+					<label>Count</label>
+				</searchResultItem>
+			</searchResultItems>
+			<nestedSearches>
+				<nestedSearch>
+					<name>Extraction Details</name>
+					<label>Extraction Details</label>
+					<description>Extraction Details</description>
+					<configurationId>dummy</configurationId>
+					<transformationConfiguration>dataExtractModule</transformationConfiguration>
+				</nestedSearch>
+			</nestedSearches>
+		</searchConfiguration>
+	</searchConfigurations>
+
+	<operationConfigurations>
+		<operationConfiguration id="add-hold">
+			<xqueries>
+				<xquery>add-hold.xml</xquery>
+			</xqueries>
+			<buttonLabel>Hold</buttonLabel>
+			<dialogTitle>Add hold to $count item(s)</dialogTitle>
+			<xformName>AddHoldsForm</xformName>
+			<operationFields>
+				<operationField>
+					<name>name</name>
+					<label>Name</label>
+				</operationField>
+				<operationField>
+					<name>description</name>
+					<label>Description</label>
+				</operationField>
+				<operationField>
+					<name>date</name>
+					<label>Date</label>
+					<type>date</type>
+					<required>true</required>
+				</operationField>
+			</operationFields>
+		</operationConfiguration>
+		<operationConfiguration id="set-retention">
+			<xqueries>
+				<xquery>set-retention.xml</xquery>
+			</xqueries>
+			<buttonLabel>Retention</buttonLabel>
+			<dialogTitle>Set retention on $count item(s)</dialogTitle>
+			<xformName>SetRetentionForm</xformName>
+			<operationFields>
+				<operationField>
+					<name>date</name>
+					<label>Date</label>
+					<type>date</type>
+					<required>true</required>
+				</operationField>
+				<operationField>
+					<name>XQuery</name>
+					<label>XQUERYNAME</label>
+				</operationField>
+			</operationFields>
+		</operationConfiguration>
+		<operationConfiguration id="remove-hold">
+			<xqueries>
+				<xquery>remove-hold.xml</xquery>
+			</xqueries>
+			<buttonLabel>Remove Holds</buttonLabel>
+			<dialogTitle>Remove holds</dialogTitle>
+			<message>Are you sure you want to remove the selected $count hold(s)?</message>
+		</operationConfiguration>
+	</operationConfigurations>
 </content>
