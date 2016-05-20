@@ -746,10 +746,24 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 	      }
 	  }
     String searchID = searchSetting.getSearchConfigurationId();
-    String auditLogEntry =
-            "app : '" + appName + "', IRM_CODE : E10, " + " user : " + currentUserName + ", searchConfiguration : '"
-                    + searchID + "', fields : " + paramList.toString() + ", role restrictions = '" + restrictions + "'";
-    
+   
+    StringBuilder auditLogEntry = new StringBuilder();
+	auditLogEntry.append("app : '");
+	auditLogEntry.append(appName);
+	auditLogEntry.append("', IRM_CODE : E10, user : ");
+	auditLogEntry.append(currentUserName);
+	auditLogEntry.append(", searchConfiguration : '");
+	auditLogEntry.append(searchID);
+	auditLogEntry.append("', fields : ");
+	auditLogEntry.append("<data>");
+	for (String key : fields.keySet()) {
+		auditLogEntry.append("<").append(key).append(">");
+		auditLogEntry.append(fields.get(key));
+		auditLogEntry.append("</").append(key).append(">");
+	}
+	auditLogEntry.append("<restrictions>").append(restrictions).append("</restrictions>");
+	auditLogEntry.append("</data>");
+	
     LogCenterServiceAsync logger = DDSServices.getLogCenterService();
     logger.log(auditLogEntry.toString(), loggerListener);
   }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>kronos</name>
+  <name>eurydice_ireland</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>Yd58oGLZHydvB29uJga9e53D/6pxFoiyILQsY8cT9ikGdVRGN5cG1RGO2wg+21l++oPCt7sc3jb/IZqHtarpFe0izKF973ogLT/420R2FEb3/+eAoJmDCtn8OSZR5oSe0jrfmAoA1TC2IaKperv5rBSosOVN48LjMc8tlCgesQY=</encryptedPassword>
+      <encryptedPassword>WA87INsFZmNludn5D+pyN0jam681KO/j6EVk7XO7sMDGOCkDJxsQ6xU6o3z+HOcnyyy4JfQXomaoJBBUDM0xPBcshNorN8QrxZ8aSZ/45MEj2cw3/ZLwgbLPa+8tGGr5oWqRa638rzv8xR7Wl37McIP/tMFKiayfweizzLPsXQg=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#kronos</bootstrap>
-    <databaseName>kronos</databaseName>
+    <bootstrap>xhive://localhost:1235#eurydice_ireland</bootstrap>
+    <databaseName>eurydice_ireland</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />
