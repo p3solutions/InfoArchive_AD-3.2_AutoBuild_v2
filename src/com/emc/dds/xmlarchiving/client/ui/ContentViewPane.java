@@ -2,11 +2,8 @@
  *******************************************************************************/
 package com.emc.dds.xmlarchiving.client.ui;
 
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -34,7 +31,6 @@ import com.emc.documentum.xml.xproc.gwt.client.rpc.SerializableSource;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame.DefaultXProcRequestSerializer;
 import com.emc.documentum.xml.xproc.gwt.client.ui.XProcFrame.XProcRequestSerializer;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -485,6 +481,11 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
 	public void displayprepObject(Element selectedElement, NodeSetting nodeSetting) {
 		currentElement = selectedElement;
 		currentNodeSetting = nodeSetting;
+	}
+	public void displayprepObject(Element selectedElement, NodeSetting nodeSetting, String type) {
+		currentElement = selectedElement;
+		currentNodeSetting = nodeSetting;
+		currentElement.setAttribute("type", type);
 	}
 
 	public void displayBusinessObject(String title, String typ, Element selectedElement,

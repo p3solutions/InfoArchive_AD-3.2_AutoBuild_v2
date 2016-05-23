@@ -392,6 +392,7 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 								@Override
 								public void onClick(ClickEvent event) {
 									unselectItems();
+									contentViewPane.displayprepObject(resultElt, currentSetting,type);
 									selectItem(currentRow, resultElt, locale);
 									fireEvent(new SearchResultItemSelectedEvent(uri, type, title, locale));
 								}

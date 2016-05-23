@@ -5,7 +5,7 @@
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>Me5bTUL+KGnhaRp1Rz/pmRdvm8cHPhpwPMOe1B1ZqZ13O+B/Gr9pHIkz7D6a5mK0RVJmHotJ530sMyVkKOc8Vn05pMWjJTJKJ8Y/EzBaxLDVNOx9WxA7fG7OsUOl06Qcs1Y/Pb9jnNRBz1WmQpFpRnTjlKnI33Lro/ecTt2/mGQ=</encryptedPassword>
+      <encryptedPassword>jHnnM/6K9y8kSADHL+B3MtAabiQMcTaA7BC6A81AmlZSNvOe8Z2f6GNjKyp3HRJ/M8uqHzeA5150CZrw19GlsNOAz7zETq8uSYkYYpmQI5fZzvNQ05YAaQkTb9PW61fQSeb/4ggeFmmH1EFegPMrJwzKDRGUPb3mlUBQg+RpHMI=</encryptedPassword>
     </defaultStoreUser>
     <bootstrap>xhive://localhost:1235#demo1</bootstrap>
     <databaseName>demo1</databaseName>
