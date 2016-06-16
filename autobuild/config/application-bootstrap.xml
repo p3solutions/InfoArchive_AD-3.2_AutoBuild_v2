@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>demo1</name>
+  <name>product</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>jHnnM/6K9y8kSADHL+B3MtAabiQMcTaA7BC6A81AmlZSNvOe8Z2f6GNjKyp3HRJ/M8uqHzeA5150CZrw19GlsNOAz7zETq8uSYkYYpmQI5fZzvNQ05YAaQkTb9PW61fQSeb/4ggeFmmH1EFegPMrJwzKDRGUPb3mlUBQg+RpHMI=</encryptedPassword>
+      <encryptedPassword>NgJrEZw0PQ3QZ/Wx4eon93xZ7YggaLiOcxRgoxhkkDu+pm8GwR4RNahNzFCiUS0KlATESVxFssDQHyRCMOCzhGeBs3SLL9ezIc6uFeFBzGXUWNzeXtD9YxadEdBi0TeV6yn9FSF1HzGiC/LgLcAxXXefLSWFSizszvcgPJl69S4=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#demo1</bootstrap>
-    <databaseName>demo1</databaseName>
+    <bootstrap>xhive://localhost:1235#product</bootstrap>
+    <databaseName>product</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />
