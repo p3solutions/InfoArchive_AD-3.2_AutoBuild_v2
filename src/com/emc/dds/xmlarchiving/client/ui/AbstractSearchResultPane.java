@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import com.emc.dds.xmlarchiving.client.authorization.Role;
@@ -32,6 +33,7 @@ import com.emc.dds.xmlarchiving.client.event.SearchResultItemSelectedEvent;
 import com.emc.dds.xmlarchiving.client.event.SearchSubmitEvent;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
 import com.emc.dds.xmlarchiving.client.p3.reporting.PersistentReportDataSource;
+import com.emc.dds.xmlarchiving.client.p3.util.SecurityUtil;
 import com.emc.dds.xmlarchiving.client.ui.image.MainImageBundle;
 import com.emc.documentum.xml.dds.gwt.client.LogCenterFailureListener;
 import com.emc.documentum.xml.dds.gwt.client.rpc.DDSServices;
@@ -328,6 +330,7 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 		if (dataSource != null && dataSource.getCount() > 0) {
 			try {
 				totalResult = dataSource.getCount();
+				SecurityUtil sec = new SecurityUtil();
 
 				int row = 1;
 				// reset the content view width
@@ -355,15 +358,32 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 					searchResults.setUserObject(row, resultElt.toString());
 					searchResults.setWidget(row, 0, image);
 
+					NamedNodeMap attrs = resultElt.getAttributes();
+					for (int i = 0; i < attrs.getLength(); i++) {
+						String att = attrs.item(i).getLocalName();
+						String value = resultElt.getAttribute(att);
+						if (att.equals("enc_mask_credit_card")) {
+							if (role.hasFieldAuthorization("decrypt")) {
+								value =  "XXXX-XXXX-XXXX-" + (sec.decryption(value)).substring(12);
+								resultElt.setAttribute(att, value);
+							}
+						} else if (att.startsWith("enc_")) {
+							if (role.hasFieldAuthorization("decrypt")) {
+								value = sec.decryption(value);
+								resultElt.setAttribute(att, value);
+							}
+						}
+					}
+
 					int column = 1;
 
 					final String locale = currentLocale;
-
 					for (Entry<String, SearchResultItem> entrySet : searchResultItems.entrySet()) {
 						String key = entrySet.getKey();
 
 						SearchResultItem resultItem = entrySet.getValue();
 						String label = resultElt.getAttribute(key);
+
 						if (resultItem.isDateInMilliseconds() && label != null && !"".equals(label)) {
 							label = DATE_FORMAT.format(new Date(Long.parseLong(label)));
 						}
@@ -392,7 +412,7 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 								@Override
 								public void onClick(ClickEvent event) {
 									unselectItems();
-									contentViewPane.displayprepObject(resultElt, currentSetting,type);
+									contentViewPane.displayprepObject(resultElt, currentSetting, type);
 									selectItem(currentRow, resultElt, locale);
 									fireEvent(new SearchResultItemSelectedEvent(uri, type, title, locale));
 								}
