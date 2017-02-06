@@ -250,7 +250,7 @@ public class ConfigurationLoader {
         mainPane.addNorth(dataSetPanel, UISize.getDetaSetHeightInt());
         break;
       case Pane.MENU_PANE:
-    	  pane = new MenuPane(this.applicationSettings, false, true);
+    	  pane = new MenuPane(this.applicationSettings, false, false, true);
     	  /* LayoutPanel menuPanel = new LayoutPanel();
        		 menuPanel.add(pane);
        		 this.outerPane.add(menuPanel);

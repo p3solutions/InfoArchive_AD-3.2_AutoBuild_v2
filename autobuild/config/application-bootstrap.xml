@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>JBA</name>
+  <name>DEMO_APP</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>VdmNb6dWfCXeB1vUGITz+8YGIVtjYiO9GY8BhM2+EvwLyRUZPI/WCARlzhRjTyfYL1ZqPDHCwBd88HWYVew9m1BNON/235uFNWnABUhVfDiR7vOgX5D24Obw4mocGPp0wMnU28KEe7htT0B6/tJePBrpfgHl4tQmdC/GTW6XXEE=</encryptedPassword>
+      <encryptedPassword>GzNC2lGYrb4miW4rkE8nAHqwXv62mruzfciudiYoH8cGwYlLx3aik5A6bK6FneRJwPNAePOihSyuC2vbHSBfjyPCH4nFFPmKM6/BOvM1rVp+qJFqf/sWXYHnkGArEC1k8Z3q7P8rM44rRmc9+i792MJTLC3VBx96lbHlJKov438=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#JBA</bootstrap>
-    <databaseName>JBA</databaseName>
+    <bootstrap>xhive://localhost:1235#DEMO_APP</bootstrap>
+    <databaseName>DEMO_APP</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />

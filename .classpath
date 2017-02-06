@@ -126,5 +126,7 @@
 	<classpathentry kind="lib" path="/DDS/lib/dds-server_10.5.0.jar"/>
 	<classpathentry kind="lib" path="lib/smauth.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-crypto-2.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/org.apache.commons.io.jar"/>
+	<classpathentry kind="lib" path="lib/atmos-client-2.1.4.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

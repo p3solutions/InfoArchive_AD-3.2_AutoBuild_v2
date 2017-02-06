@@ -46,6 +46,7 @@ public abstract class Pane extends Composite implements ProvidesResize, Requires
   public static final String STYLE_HEADER_LABEL = "template-HeaderLabel";
   public static final String STYLE_TABLE_HEADER_LABEL = "template-TableHeaderLabel";
   public static final String STYLE_SCROLL_BORDER = "scroll-border";
+  public static final String RTL_ALIGN = "rtl-align";
 
   /**
    * Constructs a pane.

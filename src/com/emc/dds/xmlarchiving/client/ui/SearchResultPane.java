@@ -21,6 +21,7 @@ import com.emc.dds.xmlarchiving.client.configuration.OperationField;
 import com.emc.dds.xmlarchiving.client.data.StoredQueryDataSource;
 import com.emc.dds.xmlarchiving.client.event.ApplicationEvent;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
+import com.emc.dds.xmlarchiving.client.p3.util.ConstantUtil;
 import com.emc.dds.xmlarchiving.client.p3.util.UISize;
 import com.emc.dds.xmlarchiving.client.rpc.LDMService;
 import com.emc.dds.xmlarchiving.client.rpc.LDMServiceAsync;
@@ -356,6 +357,7 @@ public class SearchResultPane extends AbstractSearchResultPane {
       input.addInput("query", new SerializableSource(proxyXQueryURI));
       input.addInput("stylesheet", new SerializableSource(styleSheetURI));
       input.addParameter("parameters", new SerializableQName("xquery"), fullXQuery);
+      input.addParameter("parameters", new SerializableQName("restrictionsDecrypt"), ConstantUtil.roleDetails);
 
       XProcRequestSerializer requestSerializer = new DefaultXProcRequestSerializer();
       String url =
@@ -451,7 +453,6 @@ public class SearchResultPane extends AbstractSearchResultPane {
   public void handle(ApplicationEvent event) {
     super.handle(event);
     if (event.getType() != ApplicationEvent.SEARCH_SUBMIT_EVENT){
-		
 		clearResults();
 		showEmptyContentView();
 		hPanel.clear();
@@ -510,11 +511,42 @@ public class SearchResultPane extends AbstractSearchResultPane {
 
   private void executeOperation(String input, OperationConfiguration operationConfiguration,
       String user, String configurationId) {
-
-    List<String> remainingQueries = operationConfiguration.getXqueries();
-    ldmService.handleXMLArchivingOperation(input, remainingQueries.get(0), user,
-        new HandleQueryCallback(input, user, remainingQueries.subList(1, remainingQueries.size()),
-            operationConfiguration));
+	  
+	/*if(operationConfiguration.getXformURI().equalsIgnoreCase("xforms/AddHoldsForm")){
+		String holdName = input.substring(input.indexOf("<Name>")+ 6, input.indexOf("</Name>"));
+		String query = "if(count(doc('/DATA/" + GWT.getModuleName() + "/Collection/Holds')/Holds/Hold[Name=\"" + holdName + "\"]) = 0)"
+				+ " then string-join((for $i in doc('/DATA/" + GWT.getModuleName() + "/Collection/Holds')/Holds/Hold/Name return concat('&#x2022;&#160;',$i)),'\n')"
+				+ " else '1' ";
+		
+		final String fianlHoldName = holdName;
+		final OperationConfiguration finalOperationConfiguration = operationConfiguration;
+		final String finalInput = input;
+		final String finalUser = user;
+		
+		DDSServices.getXQueryService().execute(null, query, false, new AsyncCallback<List<SerializableXQueryValue>>() {
+            @Override
+            public void onSuccess(List<SerializableXQueryValue> result) {
+            	if(!result.get(0).toString().trim().equals("1"))
+            		Dialog.alert("No hold with name \"" + fianlHoldName + "\" exists. Please check hold name.\nAvailable Hold Names are \n"+ result.get(0).toString(), MainImageBundle.INSTANCE.error48().createImage());
+            	else {
+            		 List<String> remainingQueries = finalOperationConfiguration.getXqueries();
+            		    ldmService.handleXMLArchivingOperation(finalInput, remainingQueries.get(0), finalUser,
+            		        new HandleQueryCallback(finalInput, finalUser, remainingQueries.subList(1, remainingQueries.size()),
+            		            finalOperationConfiguration));
+            	}
+            }
+            @Override
+            public void onFailure(Throwable t) {
+                LDMUIHandler.displayFriendlyException(t, "Unable to apply Hold. Please retry.");
+            }
+		});    
+	}
+	else {*/
+	    List<String> remainingQueries = operationConfiguration.getXqueries();
+	    ldmService.handleXMLArchivingOperation(input, remainingQueries.get(0), user,
+	        new HandleQueryCallback(input, user, remainingQueries.subList(1, remainingQueries.size()),
+	            operationConfiguration));
+	/*}*/
   }
 
   private void displaySelectionResult(OperationConfiguration operationConfiguration,

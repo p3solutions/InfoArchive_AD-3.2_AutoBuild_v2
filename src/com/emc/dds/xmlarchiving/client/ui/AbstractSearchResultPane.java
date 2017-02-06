@@ -33,6 +33,7 @@ import com.emc.dds.xmlarchiving.client.event.SearchResultItemSelectedEvent;
 import com.emc.dds.xmlarchiving.client.event.SearchSubmitEvent;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
 import com.emc.dds.xmlarchiving.client.p3.reporting.PersistentReportDataSource;
+import com.emc.dds.xmlarchiving.client.p3.util.ConstantUtil;
 import com.emc.dds.xmlarchiving.client.p3.util.SecurityUtil;
 import com.emc.dds.xmlarchiving.client.ui.image.MainImageBundle;
 import com.emc.documentum.xml.dds.gwt.client.LogCenterFailureListener;
@@ -41,6 +42,7 @@ import com.emc.documentum.xml.dds.gwt.client.rpc.LogCenterServiceAsync;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableElement;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableXDBException;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableXQueryValue;
+import com.emc.documentum.xml.dds.logging.LogCenter;
 import com.emc.documentum.xml.gwt.client.DataChangeListener;
 import com.emc.documentum.xml.gwt.client.Dialog;
 import com.emc.documentum.xml.gwt.client.FailureHandler;
@@ -54,6 +56,8 @@ import com.emc.documentum.xml.gwt.client.xml.XMLParser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.i18n.client.HasDirection;
+import com.google.gwt.i18n.client.HasDirection.Direction;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -75,7 +79,24 @@ import com.google.gwt.user.client.ui.Widget;
  * WARNING: This class is experimental and may change in future DDS releases.
  */
 public abstract class AbstractSearchResultPane extends ContentPane implements DataChangeListener {
+	
+	private static final Character SYMBOL_START1 = ' ';
+	private static final Character SYMBOL_END1 = '/';
+	private static final Character SYMBOL_START2 = ':';
+	private static final Character SYMBOL_END2 = '@';
+	private static final Character SYMBOL_START3 = '[';
+	private static final Character SYMBOL_END3 = '`';
+	private static final Character SYMBOL_START4 = '{';
+	private static final Character SYMBOL_END4 = '~';
 
+	private static final Character HEBREW_START = 1424;
+	private static final Character HEBREW_END = 1535;
+
+	private static final String LTR = "LTR";
+	private static final String RTL = "RTL";
+	private static final String SPA = "SPA";
+	private static final String NET = "NET";
+    
 	protected class RetrieveReportResult implements AsyncCallback<List<SerializableXQueryValue>> {
 
 		private String configurationId;
@@ -224,7 +245,6 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 		int column = 1;
 		searchResults.getRowFormatter().addStyleName(0, "header");
 		for (SearchResultItem resultItem : searchResultItems.values()) {
-
 			HTML label = getHeaderLabel(resultItem.getLabel());
 			searchResults.setWidget(0, column, label);
 			column++;
@@ -310,15 +330,19 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 			nestedSearches = searchSetting.getNestedSearches();
 		}
 
+		boolean flagspacer = false;
 		String spacer = root.getAttribute("spacer");
 		if (spacer != null && (spacer.equalsIgnoreCase("true") || spacer.equalsIgnoreCase("yes"))) {
-			Dialog.alert("Please provide atlest one valid input");
+			Dialog.alert("one or more input field contains ony spaces as input. please recheck");
+			flagspacer = true;
 		}
 
-		String limitReached = root.getAttribute("limitReached");
-		if (limitReached != null && (limitReached.equalsIgnoreCase("true") || limitReached.equalsIgnoreCase("yes"))) {
-			Dialog.alert("Many results were found.To improve performance some will not be displayed.\n"
-					+ "Refine your search criteria to get to more specific results");
+		if(!flagspacer){
+			String limitReached = root.getAttribute("limitReached");
+			if (limitReached != null && (limitReached.equalsIgnoreCase("true") || limitReached.equalsIgnoreCase("yes"))) {
+				Dialog.alert("Many results were found.To improve performance some will not be displayed.\n"
+						+ "Refine your search criteria to get to more specific results");
+			}
 		}
 
 		searchResults.removeAllRows();
@@ -330,8 +354,9 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 		if (dataSource != null && dataSource.getCount() > 0) {
 			try {
 				totalResult = dataSource.getCount();
-				SecurityUtil sec = new SecurityUtil();
-
+				SecurityUtil sec = new SecurityUtil(applicationSettings.getKey(), applicationSettings.getEncType());
+			    ConstantUtil.roleDetails = Boolean.toString(role.hasFieldAuthorization("decrypt"));
+			    
 				int row = 1;
 				// reset the content view width
 				int crpWidth = searchSetting.getContentResultsPaneWidth();
@@ -358,18 +383,27 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 					searchResults.setUserObject(row, resultElt.toString());
 					searchResults.setWidget(row, 0, image);
 
-					NamedNodeMap attrs = resultElt.getAttributes();
-					for (int i = 0; i < attrs.getLength(); i++) {
-						String att = attrs.item(i).getLocalName();
-						String value = resultElt.getAttribute(att);
-						if (att.equals("enc_mask_credit_card")) {
-							if (role.hasFieldAuthorization("decrypt")) {
-								value =  "XXXX-XXXX-XXXX-" + (sec.decryption(value)).substring(12);
-								resultElt.setAttribute(att, value);
+					if (sec.isValid() && role.hasFieldAuthorization("decrypt")) {
+						NamedNodeMap attrs = resultElt.getAttributes();
+						for (int i = 0; i < attrs.getLength(); i++) {
+							String att = attrs.item(i).getLocalName();
+							String value = att.startsWith("enc_")?applyHebrewFix(appendDec(resultElt.getAttribute(att), sec)):applyHebrewFix(resultElt.getAttribute(att));
+							if(att.startsWith("enc_")){
+								switch(att){
+								case "enc_mask_credit_card":
+									value = "XXXX-XXXX-XXXX-" + (value).substring(12);
+									resultElt.setAttribute(att, value);
+									break;
+								case "enc_mask_ssn":
+									value = "XXX-XX-" + (value).substring(5);
+									resultElt.setAttribute(att, value);
+									break;
+								default :
+									resultElt.setAttribute(att, value);
+									break;
+								}
 							}
-						} else if (att.startsWith("enc_")) {
-							if (role.hasFieldAuthorization("decrypt")) {
-								value = sec.decryption(value);
+							else {
 								resultElt.setAttribute(att, value);
 							}
 						}
@@ -399,8 +433,17 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 						} else {
 							truncatedTitle = label;
 						}
-						// create a label for each result
+						
+						// create a label for each result						
 						Label entry = new Label(truncatedTitle);
+						
+						if(checkHebrew(truncatedTitle))
+							entry = new Label(truncatedTitle,Direction.RTL);
+							
+						if(key.endsWith("_RJ"))
+							entry.addStyleName(RTL_ALIGN);
+						
+						
 						searchResults.setWidget(row, column, entry);
 
 						// each label has a ClickListener that triggers the
@@ -412,9 +455,11 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 								@Override
 								public void onClick(ClickEvent event) {
 									unselectItems();
+									//showLoadingContentView();
 									contentViewPane.displayprepObject(resultElt, currentSetting, type);
 									selectItem(currentRow, resultElt, locale);
 									fireEvent(new SearchResultItemSelectedEvent(uri, type, title, locale));
+
 								}
 							});
 						}
@@ -493,7 +538,9 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 							column++;
 						}
 					}
-					for (String key : searchSetting.getReports().keySet()) {
+					for (
+
+					String key : searchSetting.getReports().keySet()) {
 						Report report = searchSetting.getReports().get(key);
 						if (role.hasOperationAuthorization(report.getId())) {
 							final String previewConfiguration = report.getConfigurationId();
@@ -545,6 +592,135 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 			searchResults.setWidget(1, 1, entry);
 		}
 		return totalResult;
+	}
+
+	private boolean checkHebrew(String text) {
+		char[] characters = text.toCharArray();
+		for (int i = 0; i < characters.length; i++) {
+			if ((characters[i] >= HEBREW_START && characters[i] <= HEBREW_END))
+				return true;
+		}
+		return false;
+	}
+
+	private String appendDec(String value, SecurityUtil sec) throws Exception {
+		if (value == null || value.equals(""))
+			return "";
+		StringBuffer sb = new StringBuffer();
+		char[] inChar = value.toCharArray();
+		StringBuffer word = new StringBuffer();
+		for (int i = 0; i < inChar.length; i++) {
+			if (inChar[i] == '&' || inChar[i] == '<' || inChar[i] == '>' || inChar[i] == '\"' || inChar[i] == '\'') {
+				sb.append(sec.decryption(word.toString())).append(replaceChar(inChar[i]));
+				word = new StringBuffer();
+			} else
+				word.append(inChar[i]);
+		}
+		if (word.length() > 0)
+			sb.append(sec.decryption(word.toString()));
+		return sb.toString();
+	}
+
+	public static String applyHebrewFix(String input) {
+		if (containsHebrew(input)) {
+			boolean previous = false;
+			String intermediate = "";
+			String output = "";
+			for (int i = 0; i < input.length(); i++) {
+				if (checkHebrew(input.charAt(i)).equals(SPA)) {
+					if ((previous && !checkHebrew(input.charAt(i + 1)).equals(RTL))
+							|| (!previous && !checkHebrew(input.charAt(i + 1)).equals(LTR))) {
+						intermediate += input.charAt(i);
+						previous = true;
+					} else if ((previous && !checkHebrew(input.charAt(i + 1)).equals(LTR))
+							|| (!previous && !checkHebrew(input.charAt(i + 1)).equals(RTL))) {
+						output = checkBrack(input.charAt(i)) + intermediate + output;
+						intermediate = "";
+						previous = false;
+					}
+				} else if (checkHebrew(input.charAt(i)).equals(NET)) {
+					if (previous) {
+						intermediate += input.charAt(i);
+						previous = true;
+					} else {
+						output = checkBrack(input.charAt(i)) + intermediate + output;
+						intermediate = "";
+						previous = false;
+					}
+				} else if (checkHebrew(input.charAt(i)).equals(LTR)) {
+					intermediate += input.charAt(i);
+					previous = true;
+				} else {
+					output = checkBrack(input.charAt(i)) + intermediate + output;
+					intermediate = "";
+					previous = false;
+				}
+			}
+			return intermediate + output;
+		} else
+			return input;
+	}
+
+	private static boolean containsHebrew(String input) {
+		for (int i = 0; i < input.length(); i++) {
+			if (input.charAt(i) >= HEBREW_START && input.charAt(i) <= HEBREW_END)
+				return true;
+		}
+		return false;
+	}
+
+	private static char checkBrack(char ch) {
+		switch (ch) {
+		case '(':
+			return ')';
+		case ')':
+			return '(';
+		case '{':
+			return '}';
+		case '}':
+			return '{';
+		case '[':
+			return ']';
+		case ']':
+			return '[';
+		case '>':
+			return '<';
+		case '<':
+			return '>';
+		default:
+			return ch;
+		}
+
+	}
+
+	private static String checkHebrew(char charAt) {
+		if (charAt >= HEBREW_START && charAt <= HEBREW_END)
+			return RTL;
+		else if (charAt == SYMBOL_START1)
+			return SPA;
+		else if ((charAt >= SYMBOL_START1 && charAt <= SYMBOL_END1)
+				|| (charAt >= SYMBOL_START2 && charAt <= SYMBOL_END2)
+				|| (charAt >= SYMBOL_START3 && charAt <= SYMBOL_END3)
+				|| (charAt >= SYMBOL_START4 && charAt <= SYMBOL_END4))
+			return NET;
+		else
+			return LTR;
+	}
+
+	private static String replaceChar(char c) {
+		switch (c) {
+		case '&':
+			return "&amp;";
+		case '<':
+			return "&gt;";
+		case '>':
+			return "&lt;";
+		case '\"':
+		case '\'':
+			return "&quot;";
+		default:
+			return Character.toString(c);
+		}
 	}
 
 	public void setTableItem(int row, int column, String value) {
@@ -642,6 +818,7 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 			currentSetting = state.getCurrentSetting();
 			pagingBar = new PagingBar(null, getMaxListCount());
 			handleSearchSubmitEvent(submitEvent, true);
+			
 			break;
 		case ApplicationEvent.DIALOG_CLOSE_EVENT:
 			unselectItems();
@@ -680,9 +857,11 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 
 			StoredQueryDataSource source = (searchCfg.isPersistentReport())
 					? new PersistentReportDataSource(xquery, fields, this.currentSearchSetting,
-							applicationSettings.getUserName(), role.getUnauthorizedFields(), searchCfg, failureHandler)
+							applicationSettings.getUserName(), role.getUnauthorizedFields(), searchCfg, failureHandler,
+							applicationSettings.getKey(), applicationSettings.getEncType(), applicationSettings.getRole().getRoleName())
 					: new StoredQueryDataSource(xquery, fields, this.currentSearchSetting,
-							applicationSettings.getUserName(), role.getUnauthorizedFields(), failureHandler);
+							applicationSettings.getUserName(), role.getUnauthorizedFields(), failureHandler,
+							applicationSettings.getKey(), applicationSettings.getEncType());
 			source.addDataChangeListener(this);
 			this.dataSource = source;
 
@@ -730,8 +909,13 @@ public abstract class AbstractSearchResultPane extends ContentPane implements Da
 	void showEmptyContentView() {
 		AbstractSearchResultPane.this.contentViewPane.displayData("<empty></empty>",
 				getApplicationSettings().getContentViewSettings().get("empty"), "", true, null);
+		}
+	
+	void showLoadingContentView() {
+		AbstractSearchResultPane.this.contentViewPane.displayData("<noresults></noresults>",
+				getApplicationSettings().getContentViewSettings().get("noresults"), "", true, null);
 	}
-
+	
 	// TODO CAS: replace this code with Dialog.alert method when
 	// PDF frame no longer hides a popup dialog.
 	void showErrorDialogWithPosition() {

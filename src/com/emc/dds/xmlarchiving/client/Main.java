@@ -59,9 +59,27 @@ public class Main implements EntryPoint, FailureListener {
 	private Role role;
 
 	private String userName;
+	private byte[] key;
+	private String encType;
+	
+	public String getEncType() {
+		return encType;
+	}
+
+	public void setEncType(String encType) {
+		this.encType = encType;
+	}
 
 	private Panel mainPanel;
 
+	public byte[] getKey() {
+		return key;
+	}
+	
+	public void setKey(byte[] key) {
+		this.key = key;
+	}
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -143,6 +161,34 @@ public class Main implements EntryPoint, FailureListener {
 								logRequest("Application", "login", userId, "true");
 							}
 						});
+						
+						roleService.getEncryptionkey(new AsyncCallback<byte[]>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+								logger.log(caught.getMessage() , loggerListener);
+							}
+
+							@Override
+							public void onSuccess(byte[] key) {
+								setKey(key);
+							}
+						});
+
+						roleService.getEncryptionType(new AsyncCallback<String>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+								logger.log(caught.getMessage() , loggerListener);
+							}
+
+							@Override
+							public void onSuccess(String enctype) {
+								setEncType(enctype);
+							}
+						});
+
+						
 					} else {
 						// not logged in, show the login dialog or Access Denied
 						// dialogue
@@ -198,6 +244,20 @@ public class Main implements EntryPoint, FailureListener {
 		// this.mainPanel.setVisible(false);
 		logRequest("Application", "logout", userName, "true");
 		showLogout();
+		/*final RoleServiceAsync roleService = (RoleServiceAsync) GWT.create(RoleService.class);
+		roleService.logoutUser(new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+				logger.log("Failure", loggerListener);
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+				logger.log("Success", loggerListener);				
+			}
+		});*/
 	}
 
 	LogCenterFailureListener loggerListener = new LogCenterFailureListener();
@@ -230,7 +290,6 @@ public class Main implements EntryPoint, FailureListener {
 		final LoginPanel loginPanel = new LoginPanel(this);
 		rootPanel.add(loginPanel);
 		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
 			@Override
 			public void execute() {
 				loginPanel.setFocus(true);
@@ -258,6 +317,35 @@ public class Main implements EntryPoint, FailureListener {
 	public void onLoginSuccess(String userNameResult, Role roleResult) {
 		role = roleResult;
 		userName = userNameResult;
+		
+		//encryption
+		final RoleServiceAsync roleService = (RoleServiceAsync) GWT.create(RoleService.class);
+		roleService.getEncryptionkey(new AsyncCallback<byte[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+				logger.log(caught.getMessage() , loggerListener);
+			}
+
+			@Override
+			public void onSuccess(byte[] key) {
+				setKey(key);
+			}
+		});
+		
+		roleService.getEncryptionType(new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				LogCenterServiceAsync logger = DDSServices.getLogCenterService();
+				logger.log(caught.getMessage() , loggerListener);
+			}
+
+			@Override
+			public void onSuccess(String enctype) {
+				setEncType(enctype);
+			}
+		});
+		
 		RootPanel rootPanel = RootPanel.get();
 		rootPanel.removeStyleName("login");
 		rootPanel.clear();
@@ -319,6 +407,10 @@ public class Main implements EntryPoint, FailureListener {
 
 			applicationSettings.setRole(role);
 			applicationSettings.setUserName(userName);
+			
+			applicationSettings.setKey(key);
+			applicationSettings.setEncType(encType);
+			
 			applicationSettings.setUserServiceConfigured(userServiceConfigured);
 
 			DDSURI templateContentURI = new DDSURI("template/template-content.xml");

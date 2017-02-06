@@ -3,6 +3,8 @@
  *******************************************************************************/
 package com.emc.dds.xmlarchiving.server;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -11,6 +13,9 @@ import java.util.ResourceBundle;
 
 import javax.servlet.ServletContextEvent;
 
+import org.apache.commons.io.FileUtils;
+
+import com.emc.dds.xmlarchiving.client.p3.util.SecurityUtil;
 import com.emc.dds.xmlarchiving.server.operation.HandleIncomingOperation;
 import com.emc.dds.xmlarchiving.server.operation.HandleScheduledXMLArchivingOperation;
 import com.emc.dds.xmlarchiving.server.operation.LoadScheduledTasksOperation;
@@ -34,6 +39,7 @@ import com.emc.documentum.xml.dds.scheduling.TimerTask;
 import com.emc.documentum.xml.dds.scheduling.impl.SimplePeriodicalSchedule;
 import com.emc.documentum.xml.dds.service.DDSServiceType;
 import com.emc.documentum.xml.dds.servlet.ApplicationStarter;
+import com.emc.internal.utils.InstanceConstants;
 
 public class LDMApplicationStarter extends ApplicationStarter {
 
@@ -94,6 +100,33 @@ public class LDMApplicationStarter extends ApplicationStarter {
           .setDefaultLogger(new FileLogger("logs", "FSC", ".log", LogCenter.getDefaultLogger()));
     }
 
+    // Decryption module setup
+    try{
+    	String secretFile = null;
+    	String secretType = "AES";
+    	final ResourceBundle rb = ResourceBundle.getBundle("smauth");
+        for (final Enumeration<String> keys = rb.getKeys(); keys.hasMoreElements();) {
+          final String key = keys.nextElement();
+          if (key.equals("com.p3.encryption.prok.sk.file")) {
+        	  secretFile = rb.getString(key);
+          }
+          if(key.equals("com.p3.encryption.type")){
+        	  secretType = rb.getString(key);
+          }
+        }
+        if(secretFile == null)
+        	throw new Exception ("SK file path not defined");
+    	InstanceConstants.setSec(new SecurityUtil(FileUtils.readFileToByteArray(new File(secretFile)),secretType));
+    	InstanceConstants.setValid(true);
+    	LogCenter.log("Security Utils setup properly");
+    }
+    catch(IOException e){
+    	LogCenter.log("Error encountered while setting up Security Utils");
+        InstanceConstants.setValid(false);
+    } catch (Exception e) {
+    	LogCenter.log(e.getMessage());
+	}
+    
     final Application application = DDS.getApplication();
     final ServiceManager serviceManager = application.getServiceManager();
     final SchedulingService scheduleService =

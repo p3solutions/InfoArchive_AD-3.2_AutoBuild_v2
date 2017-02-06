@@ -30,10 +30,10 @@ public class RoleLoader {
 
   private List<Restriction> getRestrictions(Element role) {
     List<Restriction> restrictions = new ArrayList<Restriction>();
-
     addRestrictions(role, restrictions, "node", RestrictionType.NODE);
     addRestrictions(role, restrictions, "operation", RestrictionType.OPERATION);
     addRestrictions(role, restrictions, "field", RestrictionType.FIELD);
+    addRestrictions(role, restrictions, "roleId", RestrictionType.ROLE_NAME);
     return restrictions;
   }
 

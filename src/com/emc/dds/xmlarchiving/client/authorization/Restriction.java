@@ -8,7 +8,8 @@ public class Restriction {
   public enum RestrictionType {
     NODE,
     OPERATION,
-    FIELD
+    FIELD,
+    ROLE_NAME
   }
 
   private RestrictionType type;

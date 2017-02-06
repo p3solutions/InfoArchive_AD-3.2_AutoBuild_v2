@@ -5,30 +5,20 @@ package com.emc.dds.xmlarchiving.client.data;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
-
-import java_cup.internal_error;
-
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.emc.dds.xmlarchiving.client.configuration.SearchConfiguration;
 import com.emc.dds.xmlarchiving.client.configuration.SearchField;
 import com.emc.dds.xmlarchiving.client.configuration.SearchSetting;
-import com.emc.documentum.xml.dds.gwt.client.AbstractDDSXQueryDataSource;
+import com.emc.dds.xmlarchiving.client.p3.util.SecurityUtil;
 import com.emc.dds.xmlarchiving.client.ui.RefreshListener;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableElement;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableXDBException;
 import com.emc.documentum.xml.dds.gwt.client.rpc.persistence.SerializableXQueryValue;
-import com.emc.documentum.xml.gwt.client.xml.XMLParser;
 import com.emc.documentum.xml.gwt.client.AbstractDataSource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.regexp.shared.*;
 
 public class StoredQueryDataSource extends AbstractSettingDataSource {
     
@@ -41,6 +31,8 @@ public class StoredQueryDataSource extends AbstractSettingDataSource {
     private static final String FIRST = "first";
     private static final String LAST = "last";
     
+    private static final String ENC_FIELD = "enc_";
+    
     private static final boolean VERBOSE_FTS_SYNTAX = true;
     
     private String xquery;
@@ -50,16 +42,20 @@ public class StoredQueryDataSource extends AbstractSettingDataSource {
     private String restrictions;
     private final AsyncCallback<?> failureHandler;
     private final ArrayList<RefreshListener> refreshListeners = new ArrayList<RefreshListener>(4);
+	private byte[] key;
+	private String encType;
     
     public StoredQueryDataSource(String xquery, Map<String, String> fields, 
             SearchSetting searchSetting, String currentUserName, String restrictions,
-            AsyncCallback<?> failureHandler) {
+            AsyncCallback<?> failureHandler, byte[] key, String encType) {
         super();
         this.failureHandler = failureHandler;
         setFields(fields);
         this.searchSetting = searchSetting;
         this.currentUserName = currentUserName;
         this.restrictions = restrictions;
+        this.key = key;
+        this.encType = encType;
         setXQuery(xquery);
     }
       public String getCurrentUserName() {
@@ -194,7 +190,7 @@ public class StoredQueryDataSource extends AbstractSettingDataSource {
     
     private String injectFlexibleCode(final String query) {
         String result = query;
-        
+        SecurityUtil sec = new SecurityUtil(key, encType);
         Map<String, String> xformValues = getFields();
         Map<String, SearchField> definedFields = this.searchSetting.getSearchConfiguration().getSearchFields();
         for(Map.Entry<String, SearchField> entry : definedFields.entrySet()) {
@@ -207,8 +203,18 @@ public class StoredQueryDataSource extends AbstractSettingDataSource {
                 // Replace the arg flags with the xform values
                 code = code.replace(ARG, xformValues.get(fieldName));
 				code = code.replaceAll("&(?![#a-zA-Z0-9]+;)", "&amp;");
-                String target = createReplacementPattern(fieldName);
-                result = result.replace(target, code);
+				String target = createReplacementPattern(fieldName);
+				if(fieldName.startsWith(ENC_FIELD) && sec.isValid()){
+					try {
+						String encryptedField = sec.encryption(code);
+						result = result.replace(target,encryptedField);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					result = result.replace(target, code);
+				}
             }
         }
         return result;
@@ -251,7 +257,7 @@ public class StoredQueryDataSource extends AbstractSettingDataSource {
     @Override
     public AbstractDataSource<SerializableXQueryValue> cloneDataSource() {
         return new StoredQueryDataSource(this.xquery, getFields(), this.searchSetting, 
-                this.currentUserName, this.restrictions, this.failureHandler);
+                this.currentUserName, this.restrictions, this.failureHandler, this.key, this.encType);
     }
     
     @Override

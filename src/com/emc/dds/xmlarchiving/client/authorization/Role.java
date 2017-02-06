@@ -49,4 +49,12 @@ public class Role {
     }
     return sb.toString();
   }
+  
+  public String getRoleName() {
+    String sb = null;
+    for (Restriction restriction : restrictions)
+      if (restriction.getType() == RestrictionType.ROLE_NAME)
+        sb = restriction.getValue();
+    return sb;
+  }
 }

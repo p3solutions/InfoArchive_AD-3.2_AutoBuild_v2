@@ -6,6 +6,7 @@ package com.emc.dds.xmlarchiving.client.ui;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import com.emc.dds.xmlarchiving.client.configuration.ApplicationSettings;
 import com.emc.dds.xmlarchiving.client.configuration.Hierarchy;
 import com.emc.dds.xmlarchiving.client.configuration.NodeSetting;
@@ -15,6 +16,7 @@ import com.emc.dds.xmlarchiving.client.i18n.Locale;
 import com.emc.dds.xmlarchiving.client.ui.image.MainImageBundle;
 import com.emc.documentum.xml.dds.gwt.client.rpc.DDSServices;
 import com.emc.documentum.xml.dds.gwt.client.util.ApplicationContext;
+import com.emc.documentum.xml.gwt.client.Dialog;
 import com.emc.documentum.xml.gwt.client.FailureHandler;
 import com.emc.documentum.xml.gwt.client.ui.MenuBar;
 import com.google.gwt.user.client.Command;
@@ -23,6 +25,7 @@ import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.MenuItem;
 
 /**
+ * Updated by EMC/P3 (Abubacker Malik) to show hierarchy or Constant data
  * Updated by EMC/Flatirons (Curtis Fleming) to show the heirarchy
  * 
  * Pane that represents a menu bar. The current implementation only has sub menu's for languages and
@@ -36,7 +39,9 @@ public class MenuPane extends ContentPane {
     
     private MenuBar languagesMenu;
     
-    public MenuPane(ApplicationSettings applicationSettings, boolean showLanguages, boolean showHierarchy) {
+    public static MenuBar constantInfo;
+    
+    public MenuPane(ApplicationSettings applicationSettings, boolean showLanguages, boolean showHierarchy, boolean showConstantInfo) {
         super(applicationSettings);
         applicationSettings.getState().addListener(this);
         this.showLanguages = showLanguages;
@@ -47,15 +52,25 @@ public class MenuPane extends ContentPane {
             Hierarchy hierarchy = applicationSettings.getHierarchy();
             MenuItem item = createMenuItem(hierarchy.getRootNodeSetting(), applicationSettings, false);
             menuBar.addItem(item);
+            initWidget(menuBar);
         }
         
         if(showLanguages) {
             this.languagesMenu = new MenuBar(true);
             menuBar.addItem(new MenuItem(Locale.getLabels().language(), this.languagesMenu));
+            initWidget(menuBar);
         }
-        initWidget(menuBar);
-        this.setVisible(showLanguages || showHierarchy);
-        addStyleName(getPaneStyle());
+        
+        if(showConstantInfo){
+        	MenuItem item = createMenuItem("changeme");
+        	constantInfo = new MenuBar(true);
+        	constantInfo.setStyleName(menuBar.getStyleName());
+        	constantInfo.addItem(item);
+        	initWidget(constantInfo);
+        }
+        
+        this.setVisible(showLanguages || showHierarchy || showConstantInfo);
+        //addStyleName(getPaneStyle());
     }
     
     @Override
@@ -149,6 +164,19 @@ public class MenuPane extends ContentPane {
      *      this itemis a leaf
      * @return
      */
+    
+    public static MenuItem createMenuItem(final String text) {
+        Command command = new Command() {
+            @Override
+            public void execute() {
+            	Dialog.alert(text);
+            }
+        };
+        MenuItem infoText = new MenuItem(text, command);
+        infoText.setStyleName("gwt-MenuItemCC");
+        return infoText;
+    }
+    
     public static MenuItem createMenuItem(final NodeSetting node, 
             final ApplicationSettings applicationSettings, boolean hasAction) {
         if(node == null)

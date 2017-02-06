@@ -17,6 +17,7 @@ import com.emc.dds.xmlarchiving.client.event.ApplicationEvent;
 import com.emc.dds.xmlarchiving.client.event.ApplicationEventListener;
 import com.emc.dds.xmlarchiving.client.event.NodeSelectedEvent;
 import com.emc.dds.xmlarchiving.client.i18n.Locale;
+import com.emc.dds.xmlarchiving.client.p3.util.ConstantUtil;
 import com.emc.dds.xmlarchiving.client.ui.image.MainImageBundle;
 import com.emc.documentum.xml.dds.gwt.client.LogCenterFailureListener;
 import com.emc.documentum.xml.dds.gwt.client.rpc.DDSServices;
@@ -397,6 +398,7 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
 				input.addParameter("parameters", qname, parameters.get(qname));
 			}
 		}
+		
 		xprocFrame.setPipeline(pipelineUri);
 		xprocFrame.setPipelineInput(input);
 		xprocFrame.setContentType(contentType);
@@ -456,12 +458,6 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
 			if (xquery != null && !"".equals(xquery)) {
 				displayBusinessObject(title, typeAttr, selectedElement, previewSetting);
 				Role role = applicationSettings.getRole();
-				// logRequest(applicationSettings.getHierarchy().getTitle(),
-				// typeAttr, selectedElement,
-				// applicationSettings.getUserName(),
-				// role.getUnauthorizedFields());
-				// logRequest("yuva", typeAttr, selectedElement,"test",
-				// role.getUnauthorizedFields());
 			} else if (uri != null && !"".equals(uri)) {
 				displayUri(uri, title, previewSetting, null);
 			} else {
@@ -498,15 +494,23 @@ public class ContentViewPane extends ContentPane implements ApplicationEventList
 			String variablename = attr.getName();
 			parameters.put(new SerializableQName(variablename), attr.getValue().replace("#", "%23"));
 		}
+		parameters.put(new SerializableQName("restrictionsDecrypt"), ConstantUtil.roleDetails);
 		setTitle(title, false);
 
 		String uri = "dds://DOMAIN=resource/xqueries/" + typ + "/" + previewSetting.getXquery();
 		setXProcFrame(uri, new SerializableSource(selectedElement.toString(), null, null), previewSetting, parameters);
+		
 	}
 
 	public void clearContentViewPane() {
 		ticketInfoWasCleared = true;
 		displayData("<empty></empty>", getApplicationSettings().getContentViewSettings().get("empty"), "", true, null);
+		ticketInfoWasCleared = false;
+	}
+	
+	public void clearContentLoading() {
+		ticketInfoWasCleared = true;
+		displayData("<empty></empty>", getApplicationSettings().getContentViewSettings().get("noresults"), "Loading ...", true, null);
 		ticketInfoWasCleared = false;
 	}
 

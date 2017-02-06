@@ -41,6 +41,7 @@ import com.emc.dds.xmlarchiving.server.query.ReadFromCentera;
 import com.emc.dds.xmlarchiving.server.query.WriteToCentera;
 import com.emc.documentum.xml.dds.DDS;
 import com.emc.documentum.xml.dds.internal.DDSConstants;
+import com.emc.documentum.xml.dds.logging.LogCenter;
 import com.emc.documentum.xml.dds.xquery.xdb.internal.DDSMetadata;
 import com.emc.documentum.xml.dds.xquery.xdb.internal.DDSURIExtensionFunction;
 import com.emc.documentum.xml.dds.xquery.xdb.internal.DDSXQueryUtils;
@@ -71,6 +72,7 @@ public final class OperationsUtil {
       String xqueryName) {
     XhiveDocumentIf document =
         (XhiveDocumentIf)root.getByPath(getQueryPath(applicationName, type, xqueryName));
+    
     if (document != null) {
       return getElementValue(document.getDocumentElement(), "expression");
     }
