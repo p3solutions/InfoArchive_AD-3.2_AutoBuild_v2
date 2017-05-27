@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bootstrap>
-  <name>DEMO_APP</name>
+  <name>CLAIMS_SYS</name>
   <mainStore class="XDBStore">
     <alias>main</alias>
     <defaultStoreUser class="XDBStoreUser">
       <id>Administrator</id>
-      <encryptedPassword>LlrZ0bq9JpjsTMuJvM5G/pDuER09Yp/0/a9O1oRVndwqshnvbi3F327M4OPseEefdt1HuIKuy40N0z6m5MuS9HEKi3wBNJnT6VCnJSXy7KHMkCe3FnvcwrwGqUXO/JH6Grh14MbHSj+sO0hezMWQ3zOnqx8zgwRLBW2JEGtFmV8=</encryptedPassword>
+      <encryptedPassword>DTt+MAJt+tMz/FZK3FkSGeiDZrvqellP2bOmJ5T7E0oOSsMHnboFzZdIka60kc4bVvChmg3DUoALl+S7bfRvyGYEBQCG+g6OpkrzGYiet/JKOMmspZZFIq87FIn+TK6/3SvnZGG8d9t27MD9Kg+jS3UuFpkS+sWv0jW2P7+B1vg=</encryptedPassword>
     </defaultStoreUser>
-    <bootstrap>xhive://localhost:1235#DEMO_APP</bootstrap>
-    <databaseName>DEMO_APP</databaseName>
+    <bootstrap>xhive://localhost:1235#CLAIMS_SYS</bootstrap>
+    <databaseName>CLAIMS_SYS</databaseName>
     <cachePages>10000</cachePages>
   </mainStore>
   <defaultURIResolver class="DDSURIResolver" />

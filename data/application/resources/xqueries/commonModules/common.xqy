@@ -1,5 +1,11 @@
 module namespace common = 'common';
 
+declare function common:dateTime($date  as xs:string*) as xs:string{
+	if (empty($date) or $date = '')
+	then ''
+	else concat(month-from-dateTime(xs:dateTime($date)), "/" , day-from-dateTime(xs:dateTime($date)), "/" , year-from-dateTime(xs:dateTime($date)), " " , hours-from-dateTime(xs:dateTime($date)), ":" , minutes-from-dateTime(xs:dateTime($date)))
+};
+
 (: build where clause components from partial strings :)
 declare function common:addClause($whereClause as xs:string, $var as xs:string*, $expr as xs:string) as xs:string {
     if (empty($var) or $var = '' or normalize-space($var) = '') then $whereClause
@@ -51,3 +57,27 @@ declare function common:getQuerySubsequence($query as item()*, $first as xs:stri
         for $elem in subsequence($query, $first cast as xs:integer, $listcount) return $elem
     } </results>
 };
+
+
+(: get a count based subsequence from a provided query and then check and see if a limit has been reached :)
+declare function common:getQuerySubsequenceLimitCheck($query as item()*, $first as xs:string, $last as xs:string, $limit) as element()? {
+    let $count := count($query)
+    let $listcount := if ($last = '-1')
+        then ($count + 1)
+        else ($last cast as xs:integer - $first cast as xs:integer) + 1
+    let $limitReached := if($count >= $limit) then "true" else "false"
+    return  <results total='{ $count }' limitReached='{$limitReached}'> {
+        for $elem in subsequence($query, $first cast as xs:integer, $listcount) return $elem
+    } </results>
+};
+
+declare function common:getQuerySubsequenceSpaceCheck($query as item()*, $first as xs:string, $last as xs:string, $spacecheck) as element()? {
+    let $count := count($query)
+    let $listcount := if ($last = '-1')
+        then ($count + 1)
+        else ($last cast as xs:integer - $first cast as xs:integer) + 1
+    return  <results total='{ $count }' spacer='{$spacecheck}'> {
+        for $elem in subsequence($query, $first cast as xs:integer, $listcount) return $elem
+    } </results>
+};
+
